@@ -79,7 +79,7 @@ Koyeb's hobbyist tier is free, but strictly verifies GitHub accounts to ensure t
 2. Go to [Koyeb.com](https://www.koyeb.com/) and sign in with GitHub.
 3. Click **Create Web Service** -> Select **GitHub** -> Choose your fork.
 4. Under the **Environment Variables** section, add your `TOKEN` and `CLIENT_ID`.
-5. Expand the **Builder** section, toggle the **Run command** override, and paste: `node register.mjs && node bot.mjs`
+5. Expand the **Builder** section, toggle the **Run command** override, and paste: `node register.mjs && node controller.mjs`
 6. Expand the **Volumes** section, create a volume, and set the mount path to `/app/.data`.
 7. Name your service and click **Deploy**. The built-in health-check server will ensure Koyeb keeps the bot awake.
 

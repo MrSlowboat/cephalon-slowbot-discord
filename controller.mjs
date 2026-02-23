@@ -1,7 +1,8 @@
 import http from 'http';
 import { Client, GatewayIntentBits, Events } from 'discord.js';
-import { startWarframePoller } from './warframeApi.mjs';
+import { startPolling, cascadeEvents } from './poll.mjs';
 import { handleInteraction } from './commands.mjs';
+import { initBroadcaster, handleBoardingInteractions } from './post.mjs';
 
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) {
@@ -12,9 +13,14 @@ if (!TOKEN) {
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.once(Events.ClientReady, () => {
-  console.log(`🤖 Logged in as ${client.user.tag}!`);
-  console.log("Starting 60-second API polling...");
-  startWarframePoller(client);
+  console.log(`Logged in as ${client.user.tag}!`);
+  console.log("Starting 60-second API polling");
+  
+  // Initialize the broadcaster with the client and event emitter
+  initBroadcaster(client, cascadeEvents);
+  
+  // Start polling the API
+  startPolling();
 });
 
 // Client Error Handling
@@ -24,7 +30,13 @@ client.on(Events.Error, error => {
 
 client.on(Events.InteractionCreate, async interaction => {
   try {
-    await handleInteraction(interaction, client);
+    if (interaction.isChatInputCommand()) {
+      // Route slash commands to commands.mjs
+      await handleInteraction(interaction, client);
+    } else if (interaction.isButton() || interaction.isModalSubmit()) {
+      // Route buttons and modals to post.mjs
+      await handleBoardingInteractions(interaction, client);
+    }
   } catch (error) {
     console.error("Error handling interaction:", error);
   }

@@ -4,7 +4,7 @@ import { promises as fsPromises } from 'fs';
 const DATA_DIR = '.data';
 const DATA_FILE = `${DATA_DIR}/data.json`;
 
-// In-memory cache to lower resource intensiveness on railway
+// In-memory cache to lower resource intensiveness on Railway
 let memoryCache = null;
 
 if (!fs.existsSync(DATA_DIR)) {
@@ -16,7 +16,8 @@ export function loadData() {
   if (memoryCache !== null) {
     return memoryCache;
   }
-  //  Initial load from disk
+  
+  // Initial load from disk
   if (fs.existsSync(DATA_FILE)) {
     memoryCache = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
   } else {
@@ -29,7 +30,7 @@ export function loadData() {
 export async function saveData(data) {
   memoryCache = data;
 
-  //  Prevent bot stutters on multiple simultaneously executed board commands
+  // Prevent bot stutters on multiple simultaneously executed board commands
   try {
     await fsPromises.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
   } catch (error) {

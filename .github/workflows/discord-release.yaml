@@ -1,7 +1,5 @@
 name: Discord Release Changelog
 on:
-name: Discord Release Changelog
-on:
   release:
     types: [published]
 
