@@ -1,6 +1,6 @@
 # Cephalon Slowbot
 
-<img align="right" src="CephalonSlowbot.png" width="150" alt="Cephalon Slowbot Logo">
+<img align="right" src="CephalonSlowbot.png" width="200" alt="Cephalon Slowbot Logo">
 
 Cephalon Slowbot is a cross-server and platform Warframe LFG and alert bot for Steel Path Void Cascade Fissures. It monitors DE's API to detect active Steel Path Void Cascades and sends a notification when they pop up to every server it's invited to. The message will stay up for the duration of the cascade and give members of your server the option to "board". Once they select this, they'll be prompted to input their IGN and be assigned to a squad alongside everyone else who's done the same, regardless of which server they boarded from. All that's left is to send an in-game whisper, send out the invites, roll tile (if that's your thing) and get cascading!
 
@@ -57,7 +57,9 @@ You will need to host this bot on a Virtual Private Server (VPS) so it runs 24/7
 
 Railway is the easiest platform to use and provides you with $5 of credit for the first 30 days of use. For every month after that, on its free plan, you get $1 of credit. So long as this is the only thing you're hosting on Railway, you shouldn't ever need to top up or provide any card details. Railway is the platform I use to host the bot since it's quick, reliable, and very easy to navigate.
 
-To create your own version of this app on Railway:
+Because this repository includes a `railway.toml` configuration file, Railway will automatically handle the build process and start commands for you. 
+
+To create your own version of this app on Railway::
 
 1. Fork this repository.
 2. Go to [Railway.app](https://railway.app/) and sign in with GitHub.
@@ -67,8 +69,7 @@ To create your own version of this app on Railway:
    * `CLIENT_ID`: Your Discord Bot Client ID (The Application ID)
 5. Because cloud platforms use ephemeral storage, use `Ctrl/Cmd+K` in the bot's environment and search for "volume".
 6. Create a volume, then attach it to your service and set the mount point as `/app/.data`.
-7. Click on your bot iteration, press the settings tab, scroll down to Custom Start Command, and paste the text: `node register.mjs && node bot.mjs`
-8. Click Deploy and you're good to go! 
+7. Once that's done, Railway will take care of the rest. You're good to go! 
 
 #### Option B: Koyeb (For Established GitHub Accounts)
 
@@ -95,14 +96,13 @@ This project is fully open source under the MIT license, so as long as you have 
 ## Support/Receive Updates on the Project
 
 If you'd like to track, test, provide feedback, or contribute to the bot's functionality, you can find out more about it in my discord:
-<br><a href="https://discord.gg/yctkNhnbeH">
+<br><br><a href="https://discord.gg/yctkNhnbeH">
     <img title="" src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/66e3d74e9607e61eeec9c91b_Logo.svg" alt="Discord">
 </a><br>
 
 If Cephalon Slowbot helped you make good use of your mod drop chance booster, any donation towards my caffeine addiction, further project development, streams/YouTube, and/or getting me to TennoCon would be much appreciated! 
-
-<br><a href="https://ko-fi.com/MrSlowboat">
-  <img src="MrSlowboat.png" width="100" alt="MrSlowboat">
+<br><br><a href="https://ko-fi.com/MrSlowboat">
+  <img src="MrSlowboat.png" width="150" alt="MrSlowboat">
 </a><br>
 <a href="https://ko-fi.com/MrSlowboat">
   <img title="" src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/670f5a0172b90570b1c21dab_kofi_logo.png" alt="Ko-Fi" width="131">
