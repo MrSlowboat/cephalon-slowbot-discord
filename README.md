@@ -85,7 +85,7 @@ Koyeb's hobbyist tier is free, but strictly verifies GitHub accounts to ensure t
 
 ### How to Install The Bot on your Server
 
-Once the bot is deployed on the VPS of your choice, all that's left to do is use the `/guide` and `/setup` commands as an administrator of the server in a text/announcements channel. 
+Once the bot is deployed on the VPS of your choice, all that's left to do is install it. Click the OAuth2 link you generated earlier to add it to your server. Use the `/guide` and `/setup` commands as an administrator of the server in a text/announcements channel. 
 
 And that's it! Your iteration of Cephalon Slowbot is up and running! Go turn some thrax into prime parts and arcanes! 
 
