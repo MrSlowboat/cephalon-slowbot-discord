@@ -1,17 +1,23 @@
 {
   "name": "cephalon-slowbot-discord",
-  "version": "1.0.0",
-  "description": "",
-  "main": "bot.mjs",
+  "version": "1.1.0",
+  "description": "Cross-server Discord LFG and alert bot for Warframe's Void Cascade.",
+  "main": "controller.mjs",
   "type": "module",
   "scripts": {
-    "start": "node bot.mjs",
+    "start": "node controller.mjs",
+    "register": "node register.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "warframe",
+    "discord-bot",
+    "lfg",
+    "void-cascade"
+  ],
+  "author": "slowboat",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.25.1"
   }
 }
