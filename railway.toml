@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node register.mjs && node bot.mjs"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
