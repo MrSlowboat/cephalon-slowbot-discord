@@ -1,0 +1,81 @@
+name: Discord Release Changelog
+on:
+name: Discord Release Changelog
+on:
+  release:
+    types: [published]
+
+jobs:
+  post-to-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Extract Latest Changelog
+        run: |
+          awk '/^## / { if (p) exit; p=1 } p' CHANGELOG.md > latest_changelog.txt
+
+      - name: Send to Discord in Chunks
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+        run: |
+          python3 -c '
+          import os, json, urllib.request, time
+          
+          webhook_url = os.environ.get("DISCORD_WEBHOOK")
+          release_tag = os.environ.get("RELEASE_TAG", "")
+          release_url = os.environ.get("RELEASE_URL", "")
+          
+          with open("latest_changelog.txt", "r") as f:
+            text = f.read().strip()
+          
+          if not text:
+            text = "No changelog details found for this release."
+          
+          chunk_size = 4000
+          chunks = []
+          
+          while len(text) > chunk_size:
+            split_index = text.rfind("\n", 0, chunk_size)
+            # Fallback in case there are absolutely no newlines in a 4000 char block
+            if split_index == -1:
+              split_index = chunk_size
+            chunks.append(text[:split_index])
+            text = text[split_index:].lstrip()
+            
+          if text:
+            chunks.append(text)
+          
+          for i, chunk in enumerate(chunks):
+            if i == 0:
+              title = f"Update to Cephalon Slowbot {release_tag}".strip()
+            else:
+              title = f"Update to Cephalon Slowbot {release_tag} (Continued)".strip()
+              
+            payload = {
+              "embeds": [{
+                "title": title,
+                "url": release_url,
+                "description": f"```md\n{chunk}\n```",
+                "color": 5814783  # A nice Discord-friendly blurple/blue color
+              }]
+            }
+            
+            # Build and send the request
+            req = urllib.request.Request(
+              webhook_url, 
+              data=json.dumps(payload).encode("utf-8"), 
+              headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
+            )
+            
+            try:
+              urllib.request.urlopen(req)
+              print(f"Successfully sent chunk {i+1} of {len(chunks)}")
+            except Exception as e:
+              print(f"Failed to send chunk {i+1}: {e}")
+            
+            time.sleep(1)
+          '
