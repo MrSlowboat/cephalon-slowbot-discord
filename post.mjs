@@ -110,7 +110,7 @@ export function initBroadcaster(client, cascadeEvents) {
         const pingText = serverConfig.roleId ? `<@&${serverConfig.roleId}>\n` : "";
                
           const msg = await channel.send({
-            content: `${pingText}**Cascade up till** <t:${cascadeData.expiry}:t>. <t:${cascadeData.expiry}:R> remaining.`,
+            content: `${pingText}**Cascade up till** <t:${cascadeData.expiry}:t>. Expires in  <t:${cascadeData.expiry}:R>.`,
             embeds: [embed],
             components: [row]
           }).catch(err => {
