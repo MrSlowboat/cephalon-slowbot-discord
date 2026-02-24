@@ -1,4 +1,3 @@
-import { loadData, saveData } from './storage.mjs';
 import { loadData, saveData, addGuildToWhitelist, removeGuildFromWhitelist } from './storage.mjs';
 
 export async function handleInteraction(interaction, client) {
