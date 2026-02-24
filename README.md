@@ -67,6 +67,7 @@ To create your own version of this app on Railway::
 4. Go to the **Variables** tab in your Railway project and add the following:
    * `TOKEN`: Your Discord Bot Token (the token you generated)
    * `CLIENT_ID`: Your Discord Bot Client ID (The Application ID)
+	* `OWNER_ID`: Your Discord User ID. You can find out what this is by swapping to developer mode, clicking on your user and copying your user ID. 
 5. Because cloud platforms use ephemeral storage, use `Ctrl/Cmd+K` in the bot's environment and search for "volume".
 6. Create a volume, then attach it to your service and set the mount point as `/app/.data`.
 7. Once that's done, Railway will take care of the rest. You're good to go! 
@@ -78,14 +79,14 @@ Koyeb's hobbyist tier is free, but strictly verifies GitHub accounts to ensure t
 1. Fork this repository.
 2. Go to [Koyeb.com](https://www.koyeb.com/) and sign in with GitHub.
 3. Click **Create Web Service** -> Select **GitHub** -> Choose your fork.
-4. Under the **Environment Variables** section, add your `TOKEN` and `CLIENT_ID`.
+4. Under the **Environment Variables** section, add your `TOKEN`, `CLIENT_ID` and `OWNER_ID`.
 5. Expand the **Builder** section, toggle the **Run command** override, and paste: `node register.mjs && node controller.mjs`
 6. Expand the **Volumes** section, create a volume, and set the mount path to `/app/.data`.
 7. Name your service and click **Deploy**. The built-in health-check server will ensure Koyeb keeps the bot awake.
 
 ### How to Install The Bot on your Server
 
-Once the bot is deployed on the VPS of your choice, all that's left to do is install it. Click the OAuth2 link you generated earlier to add it to your server. Use the `/guide` and `/setup` commands as an administrator of the server in a text/announcements channel. 
+Once the bot is deployed on the VPS of your choice, all that's left to do is install it. Click the OAuth2 link you generated earlier to add it to your server. Use the `/guide` and `/setup` commands as an administrator of the server in a text/announcements channel. Next, add the servers you'd like to share your iteration of the bot with to your server whitelist. To do this, as the owner of the bot type `/whitelist` copy the server IDs (again, you can find these out by right clicking on a server in developer mode) abd send out the OAuth2 link you generated to the other servers you'd like to have in your network! 
 
 And that's it! Your iteration of Cephalon Slowbot is up and running! Go turn some thrax into prime parts and arcanes! 
 

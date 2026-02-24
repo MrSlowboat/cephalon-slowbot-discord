@@ -1,4 +1,5 @@
 import { loadData, saveData } from './storage.mjs';
+import { loadData, saveData, addGuildToWhitelist, removeGuildFromWhitelist } from './storage.mjs';
 
 export async function handleInteraction(interaction, client) {
   // Setup command
@@ -14,12 +15,49 @@ export async function handleInteraction(interaction, client) {
 
     let db = loadData();
     if (!db.servers) db.servers = {}; 
+    
+    // This correctly overwrites any existing setup for this guild
     db.servers[guildId] = { channelId: targetChannel.id, roleId: targetRole ? targetRole.id : null };
-    saveData(db);
+    await saveData(db);
 
     const rolePingText = targetRole ? `and pinging **@${targetRole.name}**` : `without any role pings`;
     await interaction.reply({ content: `**Setup Complete!**\nAlerts will be posted in <#${targetChannel.id}> ${rolePingText}.`, ephemeral: true });
     
+    return;
+  }
+
+  // Whitelist Command (Owner Only)
+  if (interaction.isChatInputCommand() && interaction.commandName === 'whitelist') {
+    const ownerId = process.env.OWNER_ID;
+
+    // The security check
+    if (interaction.user.id !== ownerId) {
+      return interaction.reply({
+        content: "Nice try, but only the Cephalon's creator can authorize new relays.",
+        ephemeral: true
+      });
+    }
+
+    const subcommand = interaction.options.getSubcommand();
+    const serverId = interaction.options.getString('server_id');
+
+    if (subcommand === 'add') {
+      const added = await addGuildToWhitelist(serverId);
+      if (added) {
+        return interaction.reply({ content: `✅ Server \`${serverId}\` has been successfully whitelisted.`, ephemeral: true });
+      } else {
+        return interaction.reply({ content: `⚠️ Server \`${serverId}\` is already on the whitelist.`, ephemeral: true });
+      }
+    }
+
+    if (subcommand === 'remove') {
+      const removed = await removeGuildFromWhitelist(serverId);
+      if (removed) {
+        return interaction.reply({ content: `🛑 Server \`${serverId}\` has been removed from the whitelist.`, ephemeral: true });
+      } else {
+        return interaction.reply({ content: `⚠️ Server \`${serverId}\` was not on the whitelist.`, ephemeral: true });
+      }
+    }
     return;
   }
 

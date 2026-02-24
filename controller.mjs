@@ -3,6 +3,7 @@ import { Client, GatewayIntentBits, Events } from 'discord.js';
 import { startPolling, cascadeEvents } from './poll.mjs';
 import { handleInteraction } from './commands.mjs';
 import { initBroadcaster, handleBoardingInteractions } from './post.mjs';
+import { isGuildWhitelisted } from './storage.mjs';
 
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) {
@@ -12,8 +13,20 @@ if (!TOKEN) {
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.once(Events.ClientReady, () => {
+client.once(Events.ClientReady, async () => {
   console.log(`Logged in as ${client.user.tag}!`);
+
+  // --- Startup Whitelist Purge ---
+  console.log("Running startup whitelist check...");
+  for (const [guildId, guild] of client.guilds.cache) {
+    if (!isGuildWhitelisted(guildId)) {
+      console.log(`Found unauthorized server on startup. Leaving ${guild.name} (${guildId})...`);
+      await guild.leave().catch(console.error);
+    }
+  }
+  console.log("Startup whitelist check complete.");
+  // -------------------------------
+
   console.log("Starting 60-second API polling");
   
   // Initialize the broadcaster with the client and event emitter
@@ -22,6 +35,31 @@ client.once(Events.ClientReady, () => {
   // Start polling the API
   startPolling();
 });
+
+// --- New Guild Join Bouncer ---
+client.on(Events.GuildCreate, async guild => {
+  if (!isGuildWhitelisted(guild.id)) {
+    console.log(`Unauthorized join attempt. Leaving server: ${guild.name} (${guild.id})`);
+    
+    try {
+      const defaultChannel = guild.systemChannel || guild.channels.cache.find(c => 
+        c.isTextBased() && c.permissionsFor(guild.members.me).has('SendMessages')
+      );
+      
+      if (defaultChannel) {
+        await defaultChannel.send('Cephalon Slowbot is currently whitelisted and not authorized for this server. Leaving now. 👋');
+      }
+      
+      await guild.leave();
+      console.log(`Successfully left unauthorized server: ${guild.id}`);
+    } catch (error) {
+      console.error(`Failed to leave unauthorized server ${guild.id}:`, error);
+    }
+  } else {
+    console.log(`Successfully joined whitelisted server: ${guild.name} (${guild.id})`);
+  }
+});
+// ------------------------------
 
 // Client Error Handling
 client.on(Events.Error, error => {

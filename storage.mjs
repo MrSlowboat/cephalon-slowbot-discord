@@ -20,8 +20,14 @@ export function loadData() {
   // Initial load from disk
   if (fs.existsSync(DATA_FILE)) {
     memoryCache = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    
+    // Safety check: migrating older data.json files to include the whitelist array
+    if (!memoryCache.whitelistedServers) {
+      memoryCache.whitelistedServers = [];
+    }
   } else {
-    memoryCache = { activeCascade: null, squads: [], servers: {} };
+    // Include the array in the default schema
+    memoryCache = { activeCascade: null, squads: [], servers: {}, whitelistedServers: [] };
   }
   
   return memoryCache;
@@ -36,4 +42,34 @@ export async function saveData(data) {
   } catch (error) {
     console.error("Failed to write database to disk:", error);
   }
+}
+
+// --- Whitelist Database Methods ---
+
+export function isGuildWhitelisted(guildId) {
+  const data = loadData();
+  return data.whitelistedServers.includes(guildId);
+}
+
+export async function addGuildToWhitelist(guildId) {
+  const data = loadData();
+  if (!data.whitelistedServers.includes(guildId)) {
+    data.whitelistedServers.push(guildId);
+    await saveData(data);
+    return true; // Successfully added
+  }
+  return false; // Already in the list
+}
+
+export async function removeGuildFromWhitelist(guildId) {
+  const data = loadData();
+  const initialLength = data.whitelistedServers.length;
+  
+  data.whitelistedServers = data.whitelistedServers.filter(id => id !== guildId);
+  
+  if (data.whitelistedServers.length !== initialLength) {
+    await saveData(data);
+    return true; // Successfully removed
+  }
+  return false; // Was not in the list to begin with
 }
