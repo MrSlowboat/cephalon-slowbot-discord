@@ -21,7 +21,7 @@ client.once(Events.ClientReady, async () => {
   for (const [guildId, guild] of client.guilds.cache) {
     if (!isGuildWhitelisted(guildId)) {
       console.log(`Found unauthorized server on startup. Leaving ${guild.name} (${guildId})...`);
-      // await guild.leave().catch(console.error);
+      await guild.leave().catch(console.error);
     }
   }
   console.log("Startup whitelist check complete.");
@@ -50,7 +50,7 @@ client.on(Events.GuildCreate, async guild => {
         await defaultChannel.send('Cephalon Slowbot is currently whitelisted and not authorized for this server. Leaving now. 👋');
       }
       
-      // await guild.leave();
+      await guild.leave();
       console.log(`Successfully left unauthorized server: ${guild.id}`);
     } catch (error) {
       console.error(`Failed to leave unauthorized server ${guild.id}:`, error);
