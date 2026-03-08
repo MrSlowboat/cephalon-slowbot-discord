@@ -16,10 +16,12 @@ Cephalon Slowbot is a cross-server and platform Warframe LFG and alert bot for S
 
 Once you've invited Cephalon Slowbot (or any of its iterations) to your server, you'll need to get it set up. 
 
-1. Decide which channel you'd like it to post cascade notifications in and type `/guide` if you'd like it to inform people how to use the bot, how to make sure they're ready for a cascade, and ensure that they know what to expect upon clicking board. 
+1. Decide which channel you'd like it to post cascade notifications in. Make sure to add the bot to this channel, it will not automatically add itself to any channels because I have programmed it to be as unintrusive as possible. It will not read, message or add itself to channels you haven't manually added it to. 
+2. Type `/guide` if you'd like it to inform people how to use the bot, how to make sure they're ready for a cascade, and ensure that they know what to expect upon clicking board. 
    * *The guide is specifically tailored to my personal beliefs about the way the bot should function. If you'd like to preview what it will post, click on the `GUIDE.md` file in this repository. If you are unhappy with it in any way, feel free to write rules that better suit your community. If you've forked this repository to create your own instance of the bot, you can edit the guide output in the `commands.mjs` file to have your instance of the bot post it instead.*
 2. Use the `/setup` command to ensure that the bot will post to the channel you've selected, and select which roles, if any, you'd like it to ping.
 3. Wait for a fissure to pop, squad up, and get cascading!
+4. If you'd like to deploy the bot to other servers and you're the one who's created the version of the app for your LFG, use the /whitelist command and paste the server ID (viewable in discord developmental mode by right clicking the server's name) into the field it provides you. No one except the creator of the bot can currently whitelist its deployment. 
 
 ## Creating your own version of this app
 
@@ -36,7 +38,7 @@ To start off with, you're going to need to create a Discord app through their [D
 1. Ignore your public key (this won't be relevant for deploying the bot).
 2. Note down your **Application ID**.
 3. Navigate to the **Bot** panel, click on reset token, authenticate, and note down your token. **Do not share this token with anyone.**
-   * *If this token appears in an unencrypted form anywhere online, the best-case scenario is Discord immediately killing your version of the bot. The worst case is someone hijacking it and, because of the permissions it requires, completely destroying your server.*
+> **Note:** If this token appears in an unencrypted form anywhere online, the best-case scenario is Discord immediately killing your version of the bot. The worst case is someone hijacking it and, because of the permissions it requires, completely destroying your server.*
 4. To set the bot to private, go to Installation, disable User Install (to make it Guild Install only), and set the install link to None (we'll be generating our own).
 5. Skip OAuth2 for now (you don't actually need to do this, it's just more intuitive) and head over to the Bot tab. Disable the Public Bot setting and save your changes.
 6. Navigate to OAuth2 and in the OAuth2 URL generator, grant it the following privileges: `applications.commands` (required for server-specific setup) and `bot` (required for functionality).
@@ -44,9 +46,8 @@ To start off with, you're going to need to create a Discord app through their [D
    * **View Channels & Read Message History:** This is how the bot is able to sync itself across servers.
    * **Send Messages & Embed Links:** This is how the bot posts and edits the Fissure LFG embed.
    * **Mention Everyone:** This is because the `/setup` command gives admins the option to select a role to ping when a cascade pops up. If you do not want your version of the bot to be able to ping people, this is optional. 
-   * *I have tried to make sure it requires the fewest permissions possible to ensure security, though bear in mind that being able to embed links, send messages, and mention people still carries risk. I cannot emphasise enough how important it is to keep your token private.*
+> **Note:** I have tried to make sure it requires the fewest permissions possible to ensure security, though bear in mind that being able to embed links, send messages, and mention people still carries risk. I cannot emphasise enough how important it is to keep your token private.
 8. Note down your OAuth2 link; this is what you'll distribute to other servers to make them a part of your version of the bot's LFG network.
-
 > **Note:** This bot has to log the server IDs, role IDs, member IDs, and channel IDs of the servers it is configured in. This prevents the bot from 'forgetting' its configuration every time an update is pushed to the code. These aren't secrets (they can be seen in Discord Developer mode), but I did want to provide this information up front for full transparency if you're using the bot. The host will have access to this information, although there's not a lot they can do with it and they don't pose any real security risk. 
 
 ### How to Host Your Own Instance
